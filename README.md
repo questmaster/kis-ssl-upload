@@ -3,7 +3,7 @@ Script to upload domain SSL certificates to [HostEurope](https://www.hosteurope.
 
 ## What the script does
 * Log into KIS (using Chrome)
-* Replace existing SSL certificate as configured
+* Replace existing SSL certificate / domain key with `domain.crt` & `domain-key.txt` from specified path
 * Can be used in bulk: Add 1-n domains in the config file
 
 ## Usage

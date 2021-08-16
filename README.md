@@ -16,3 +16,4 @@ Script to upload domain SSL certificates to [HostEurope](https://www.hosteurope.
 - [ ] Simplify `Domain` class
 - [ ] Add Let's Encrypt certificate renewal
 - [ ] Add 'challenge' FTP upload
+- [ ] Confirm result after upload

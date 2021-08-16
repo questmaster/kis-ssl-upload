@@ -1,0 +1,17 @@
+{
+    "settings": {
+            "kis_user": "kis user name",
+            "kis_password": "kis password",
+            "kis_webpack_id": "123456"
+    },
+    "domains": [
+        {
+            "url": "my.first.domain.de",
+            "local_path": "C:\\Users\\Test\\Desktop\\first"
+        },
+        {
+            "url": "my.second.domain.de",
+            "local_path": "C:\\Users\\Test\\Desktop\\second"
+        }        
+    ]
+}

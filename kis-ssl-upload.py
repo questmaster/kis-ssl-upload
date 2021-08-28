@@ -104,14 +104,13 @@ def upload_certificate(browser, ssl_href, local_path):
     browser.attach_file('certfile', os.path.join(local_path, 'domain.crt'))
     browser.attach_file('keyfile', os.path.join(local_path, 'domain-key.txt'))
 
-    # press upload button
+    # find & press upload button
     for b in browser.find_by_tag('input'):
         if b['type'] == 'submit':
             b.click()
             break
 
     # check if successul
-    sleep(3)
     if 'Die Dateien wurden erfolgreich hochgeladen.' in browser.html or 'the files have been successfully uploaded.' in browser.html:
         return True
     else:

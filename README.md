@@ -1,7 +1,7 @@
 # KIS SSL upload script
 Script to upload domain SSL certificates to [HostEurope](https://www.hosteurope.de)'s customer portal ("[KIS](https://kis.hosteurope.de)").
 
-<img src="https://github.com/nicolaus-hee/kis-ssl-upload/blob/main/KIS%20screenshot%20SSL%20cert%20replacement.png" width="600">
+<img src="https://github.com/nicolaus-hee/kis-ssl-upload/blob/main/images/KIS%20screenshot%20SSL%20cert%20replacement.png" width="600">
 
 ## What the script does
 * Log into KIS (using Chrome)
@@ -19,5 +19,5 @@ Script to upload domain SSL certificates to [HostEurope](https://www.hosteurope.
 - [ ] Simplify `Domain` class
 - [ ] Add Let's Encrypt certificate renewal
 - [ ] Add 'challenge' FTP upload
-- [ ] Confirm result after upload
+- [x] Confirm result after upload
 - [ ] Support KIS GUI set to English

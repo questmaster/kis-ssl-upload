@@ -3,7 +3,8 @@ from splinter import Browser
 from time import sleep
 import json
 import os
-from ftplib import FTP
+
+from renew_certificate import create_certificate
 
 class Domain():
     url = ''
@@ -12,6 +13,10 @@ class Domain():
     cert_file = ''
     key_file = ''
     challenge_path = ''
+    certificate_created = False
+    ftp_server = ''
+    ftp_user = ''
+    ftp_pass = ''
 
     def __repr__(self):
         return self.url + ' / ' + self.ssl_href
@@ -27,6 +32,11 @@ def main():
 
     print('Found ' + str(len(domains)) + ' domains in config file.')
 
+    # create certificates
+    for d in domains:
+        if create_certificate(d.url, config['settings']['email'], d.ftp_server, d.ftp_user, d.ftp_pass, d.challenge_path, d.local_path):
+            d.certificate_created = True
+
     # kis login
     print("Logging into HE KIS.")
     browser = kis_login(config['settings']['kis_user'], config['settings']['kis_password'])
@@ -41,13 +51,14 @@ def main():
     # loop through HE domains and update SSL if in config
     for h in hosteurope_domains:
         for d in domains:
-            if h.url == d.url:
-                print("Now updating " + str(h.url))
-                h2 = get_domain(domains, h.url)
-                if upload_certificate(browser, h.ssl_href, h2.local_path, h2.cert_file, h2.key_file):
-                    print("Uploaded successfully")
-                else:
-                    print("Upload failed")
+            if d.certificate_created == True:
+                if h.url == d.url:
+                    print("Now updating " + str(h.url))
+                    h2 = get_domain(domains, h.url)
+                    if upload_certificate(browser, h.ssl_href, h2.local_path, h2.cert_file, h2.key_file):
+                        print("Uploaded successfully")
+                    else:
+                        print("Upload failed")
 
     browser.visit('https://kis.hosteurope.de/?logout=1')
 
@@ -65,6 +76,9 @@ def read_config():
             domain.cert_file = d['cert_file']
             domain.key_file = d['key_file']
             domain.challenge_path = d['challenge_path']
+            domain.ftp_server = d['ftp_server']
+            domain.ftp_user = d['ftp_user']
+            domain.ftp_pass = d['ftp_pass']
             domains.append(domain)
     except:
         config = json.loads('{}')
@@ -110,6 +124,13 @@ def get_ssl_domains(browser, kis_webpack_id):
 
     return domains
 
+def get_domain(domains, domain):
+    for d in domains:
+        if d.url == domain:
+            return d
+    
+    return None
+
 def upload_certificate(browser, ssl_href, local_path, cert_file, key_file):
     # open cert upload page for domain
     browser.visit(ssl_href)
@@ -130,24 +151,6 @@ def upload_certificate(browser, ssl_href, local_path, cert_file, key_file):
     else:
         return False
 
-def get_domain(domains, domain):
-    for d in domains:
-        if d.url == domain:
-            return d
-    
-    return None
-
-def challenge_upload(ftp_server, ftp_user, ftp_pass, ftp_dir, challenges):
-    f = FTP(ftp_server)
-    if f.login(ftp_user, ftp_pass):
-        f.cwd(ftp_dir)
-        for c in challenges:
-            f.storlines('STOR ' + str(c), open(c, 'rb'))
-        f.quit()
-    else:
-        return False
-
-    return True
 
 if __name__ == "__main__":
     main()

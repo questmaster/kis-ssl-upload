@@ -3,6 +3,7 @@ from splinter import Browser
 from time import sleep
 import json
 import os
+from ftplib import FTP
 
 class Domain():
     url = ''
@@ -10,6 +11,7 @@ class Domain():
     local_path = ''
     cert_file = ''
     key_file = ''
+    challenge_path = ''
 
     def __repr__(self):
         return self.url + ' / ' + self.ssl_href
@@ -60,6 +62,7 @@ def read_config():
             domain.local_path = d['local_path']
             domain.cert_file = d['cert_file']
             domain.key_file = d['key_file']
+            domain.challenge_path = d['challenge_path']
             domains.append(domain)
     except:
         config = json.loads('{}')
@@ -131,6 +134,18 @@ def get_domain(domains, domain):
             return d
     
     return None
+
+def challenge_upload(ftp_server, ftp_user, ftp_pass, ftp_dir, challenges):
+    f = FTP(ftp_server)
+    if f.login(ftp_user, ftp_pass):
+        f.cwd(ftp_dir)
+        for c in challenges:
+            f.storelines('STOR ' & c.file_name, open(c.file_name, 'r'))
+        f.quit()
+    else:
+        return False
+
+    return True
 
 if __name__ == "__main__":
     main()

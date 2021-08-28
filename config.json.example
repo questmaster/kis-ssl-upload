@@ -2,20 +2,28 @@
     "settings": {
             "kis_user": "kis user name",
             "kis_password": "kis password",
-            "kis_webpack_id": "123456"
+            "kis_webpack_id": "123456"           
     },
     "domains": [
         {
             "url": "my.first.domain.de",
             "local_path": "C:\\Users\\Test\\Desktop\\first",
             "cert_file": "domain.crt",
-            "key_file": "domain-key.txt"
+            "key_file": "domain-key.txt",
+            "challenge_path": "/www/domain1/.well-known/acme-challenge",
+            "ftp_server": "ftp.domain1.de",
+            "ftp_user": "",
+            "ftp_pass": "" 
         },
         {
             "url": "my.second.domain.de",
             "local_path": "C:\\Users\\Test\\Desktop\\second",
             "cert_file": "domain.crt",
-            "key_file": "domain-key.txt"            
+            "key_file": "domain-key.txt",
+            "challenge_path": "/www/domain2/.well-known/acme-challenge",
+            "ftp_server": "ftp.domain2.de",
+            "ftp_user": "",
+            "ftp_pass": "" 
         }        
     ]
 }

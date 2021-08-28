@@ -49,6 +49,8 @@ def main():
                 else:
                     print("Upload failed")
 
+    browser.visit('https://kis.hosteurope.de/?logout=1')
+
     print("Done!")
 
 def read_config():

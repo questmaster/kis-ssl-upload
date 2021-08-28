@@ -17,6 +17,10 @@ def main():
 
     # parse config
     config, domains = read_config()
+    if len(domains) == 0:
+        print('Config file empty or not existing.')
+        exit()
+
     print('Found ' + str(len(domains)) + ' domains in config file.')
 
     # kis login
@@ -32,19 +36,25 @@ def main():
         for d in domains:
             if h.url == d.url:
                 print("Now updating " + str(h.url))
-                upload_certificate(browser, h.ssl_href, get_domain(domains, h.url).local_path)
+                if upload_certificate(browser, h.ssl_href, get_domain(domains, h.url).local_path):
+                    print("Uploaded successfully")
+                else:
+                    print("Upload failed")
 
     print("Done!")
 
 def read_config():
     # read domain settings from config.json
-    config = json.load(open('config.json',encoding='utf-8'))
     domains = []
-    for d in config['domains']:
-        domain = Domain()
-        domain.url = d['url']
-        domain.local_path = d['local_path']
-        domains.append(domain)
+    try:
+        config = json.load(open('config.json',encoding='utf-8'))
+        for d in config['domains']:
+            domain = Domain()
+            domain.url = d['url']
+            domain.local_path = d['local_path']
+            domains.append(domain)
+    except:
+        config = json.loads('{}')
 
     return config, domains
 
@@ -52,14 +62,14 @@ def kis_login(username, password):
     browser = Browser('chrome')
 
     # log into KIS
-    sign_in_url = "https://sso.hosteurope.de/?app=kis&path="
-    browser.visit(sign_in_url)
+    browser.visit('https://sso.hosteurope.de/?app=kis&path=')
     browser.fill('identifier', username)
     browser.fill('password', password)
     button = browser.find_by_tag('button')[1]
     button.click()
 
-    sleep(3) # change to while url still with SSO
+    sleep(3)
+    # to do: change to while url still with SSO
     # to do: catch ok / not ok
         
     return browser
@@ -100,15 +110,15 @@ def upload_certificate(browser, ssl_href, local_path):
             b.click()
             break
 
+    # to do: catch if unsuccessful
     return True
 
 def get_domain(domains, domain):
     for d in domains:
         if d.url == domain:
             return d
-            break
     
-    return False
+    return None
 
 if __name__ == "__main__":
     main()

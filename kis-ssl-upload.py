@@ -28,6 +28,9 @@ def main():
     # kis login
     print("Logging into HE KIS.")
     browser = kis_login(config['settings']['kis_user'], config['settings']['kis_password'])
+    if not browser:
+        print('Invalid user name or password.')
+        exit()
 
     # pull ssl domains from kis
     hosteurope_domains = get_ssl_domains(browser, config['settings']['kis_webpack_id'])
@@ -73,9 +76,10 @@ def kis_login(username, password):
     button = browser.find_by_tag('button')[1]
     button.click()
 
-    sleep(3)
     # to do: change to while url still with SSO
-    # to do: catch ok / not ok
+    sleep(5)
+    if 'https://sso.hosteurope.de/' in browser.url:
+        return False
         
     return browser
 

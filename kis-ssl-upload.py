@@ -83,10 +83,10 @@ def get_ssl_domains(browser, kis_webpack_id):
     # copy domain properties to collection
     domains = []
     for domain in domain_table_rows:
-        if(domain.find_by_tag('td')[3].value == "Ja"):
+        if(domain.find_by_tag('td')[3].value == "Ja" or domain.find_by_tag('td')[3].value == "Yes"):
             d = Domain()
 
-            if(domain.find_by_tag('td')[1].value != "- keine Domains zugeordnet -"):
+            if(domain.find_by_tag('td')[1].value != "- keine Domains zugeordnet -" and domain.find_by_tag('td')[1].value != '- no domain assigned -'):
                 d.url = domain.find_by_tag('td')[1].value
             else:
                 d.url = domain.find_by_tag('td')[2].value
@@ -112,7 +112,7 @@ def upload_certificate(browser, ssl_href, local_path):
 
     # check if successul
     sleep(3)
-    if 'Die Dateien wurden erfolgreich hochgeladen.' in browser.html:
+    if 'Die Dateien wurden erfolgreich hochgeladen.' in browser.html or 'the files have been successfully uploaded.' in browser.html:
         return True
     else:
         return False

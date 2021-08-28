@@ -20,4 +20,4 @@ Script to upload domain SSL certificates to [HostEurope](https://www.hosteurope.
 - [ ] Add Let's Encrypt certificate renewal
 - [ ] Add 'challenge' FTP upload
 - [x] Confirm result after upload
-- [ ] Support KIS GUI set to English
+- [x] Support KIS GUI set to English

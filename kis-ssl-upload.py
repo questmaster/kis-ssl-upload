@@ -38,7 +38,8 @@ def main():
         for d in domains:
             if h.url == d.url:
                 print("Now updating " + str(h.url))
-                if upload_certificate(browser, h.ssl_href, get_domain(domains, h.url).local_path, get_domain(domains, h.url).cert_file, get_domain(domains, h.url).key_file):
+                h2 = get_domain(domains, h.url)
+                if upload_certificate(browser, h.ssl_href, h2.local_path, h2.cert_file, h2.key_file):
                     print("Uploaded successfully")
                 else:
                     print("Upload failed")
@@ -114,7 +115,7 @@ def upload_certificate(browser, ssl_href, local_path, cert_file, key_file):
             b.click()
             break
 
-    # check if successul
+    # check if successful
     if 'Die Dateien wurden erfolgreich hochgeladen.' in browser.html or 'the files have been successfully uploaded.' in browser.html:
         return True
     else:

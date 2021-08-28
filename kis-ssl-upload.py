@@ -110,8 +110,12 @@ def upload_certificate(browser, ssl_href, local_path):
             b.click()
             break
 
-    # to do: catch if unsuccessful
-    return True
+    # check if successul
+    sleep(3)
+    if 'Die Dateien wurden erfolgreich hochgeladen.' in browser.html:
+        return True
+    else:
+        return False
 
 def get_domain(domains, domain):
     for d in domains:

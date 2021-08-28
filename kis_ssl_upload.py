@@ -4,7 +4,7 @@ from time import sleep
 import json
 import os
 
-from renew_certificate import create_certificate
+from create_certificate import create_certificate
 
 class Domain():
     url = ''
@@ -32,12 +32,18 @@ def main():
 
     print('Found ' + str(len(domains)) + ' domains in config file.')
 
+    print(" ")
+    print("Creating certificates")
+
     # create certificates
     for d in domains:
+        print('Creating certificate for ' + str(d.url))
         if create_certificate(d.url, config['settings']['email'], d.ftp_server, d.ftp_user, d.ftp_pass, d.challenge_path, d.local_path):
             d.certificate_created = True
 
     # kis login
+    print(" ")
+    print("Uploading certificates")    
     print("Logging into HE KIS.")
     browser = kis_login(config['settings']['kis_user'], config['settings']['kis_password'])
     if not browser:
@@ -48,7 +54,7 @@ def main():
     hosteurope_domains = get_ssl_domains(browser, config['settings']['kis_webpack_id'])
     print("Found " + str(len(hosteurope_domains)) + " domains in KIS.")
 
-    # loop through HE domains and update SSL if in config
+    # loop through HE domains and update SSL if in config & new certificate exists
     for h in hosteurope_domains:
         for d in domains:
             if d.certificate_created == True:
@@ -60,6 +66,7 @@ def main():
                     else:
                         print("Upload failed")
 
+    # log out of KIS
     browser.visit('https://kis.hosteurope.de/?logout=1')
 
     print("Done!")
@@ -150,7 +157,6 @@ def upload_certificate(browser, ssl_href, local_path, cert_file, key_file):
         return True
     else:
         return False
-
 
 if __name__ == "__main__":
     main()

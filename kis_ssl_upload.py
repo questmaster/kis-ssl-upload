@@ -142,7 +142,7 @@ def challenge_upload(ftp_server, ftp_user, ftp_pass, ftp_dir, challenges):
     if f.login(ftp_user, ftp_pass):
         f.cwd(ftp_dir)
         for c in challenges:
-            f.storelines('STOR ' & c.file_name, open(c.file_name, 'r'))
+            f.storlines('STOR ' + str(c), open(c, 'rb'))
         f.quit()
     else:
         return False

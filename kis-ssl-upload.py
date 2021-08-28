@@ -8,6 +8,8 @@ class Domain():
     url = ''
     ssl_href = ''
     local_path = ''
+    cert_file = ''
+    key_file = ''
 
     def __repr__(self):
         return self.url + ' / ' + self.ssl_href
@@ -36,7 +38,7 @@ def main():
         for d in domains:
             if h.url == d.url:
                 print("Now updating " + str(h.url))
-                if upload_certificate(browser, h.ssl_href, get_domain(domains, h.url).local_path):
+                if upload_certificate(browser, h.ssl_href, get_domain(domains, h.url).local_path, get_domain(domains, h.url).cert_file, get_domain(domains, h.url).key_file):
                     print("Uploaded successfully")
                 else:
                     print("Upload failed")
@@ -52,6 +54,8 @@ def read_config():
             domain = Domain()
             domain.url = d['url']
             domain.local_path = d['local_path']
+            domain.cert_file = d['cert_file']
+            domain.key_file = d['key_file']
             domains.append(domain)
     except:
         config = json.loads('{}')
@@ -96,13 +100,13 @@ def get_ssl_domains(browser, kis_webpack_id):
 
     return domains
 
-def upload_certificate(browser, ssl_href, local_path):
+def upload_certificate(browser, ssl_href, local_path, cert_file, key_file):
     # open cert upload page for domain
     browser.visit(ssl_href)
 
     # select files to upload
-    browser.attach_file('certfile', os.path.join(local_path, 'domain.crt'))
-    browser.attach_file('keyfile', os.path.join(local_path, 'domain-key.txt'))
+    browser.attach_file('certfile', os.path.join(local_path, cert_file))
+    browser.attach_file('keyfile', os.path.join(local_path, key_file))
 
     # find & press upload button
     for b in browser.find_by_tag('input'):

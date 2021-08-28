@@ -5,7 +5,7 @@ Script to upload domain SSL certificates to [HostEurope](https://www.hosteurope.
 
 ## What the script does
 * Log into KIS (using Chrome)
-* Replace existing SSL certificate / domain key with `domain.crt` & `domain-key.txt` from specified path
+* Replace existing SSL certificate / domain key files with those from the specified path
 * Can be used in bulk: Add 1-n domains in the config file
 
 ## Usage
@@ -15,7 +15,7 @@ Script to upload domain SSL certificates to [HostEurope](https://www.hosteurope.
 * Run `python kis-ssl-upload.py`
 
 ## To do
-- [ ] Allow for custom file names
+- [x] Allow for custom file names
 - [ ] Simplify `Domain` class
 - [ ] Add Let's Encrypt certificate renewal
 - [ ] Add 'challenge' FTP upload

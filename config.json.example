@@ -7,11 +7,15 @@
     "domains": [
         {
             "url": "my.first.domain.de",
-            "local_path": "C:\\Users\\Test\\Desktop\\first"
+            "local_path": "C:\\Users\\Test\\Desktop\\first",
+            "cert_file": "domain.crt",
+            "key_file": "domain-key.txt"
         },
         {
             "url": "my.second.domain.de",
-            "local_path": "C:\\Users\\Test\\Desktop\\second"
+            "local_path": "C:\\Users\\Test\\Desktop\\second",
+            "cert_file": "domain.crt",
+            "key_file": "domain-key.txt"            
         }        
     ]
 }

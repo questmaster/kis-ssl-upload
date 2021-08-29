@@ -14,7 +14,8 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 import os
 from ftplib import FTP
 
-DIRECTORY_URL = 'https://acme-staging-v02.api.letsencrypt.org/directory'
+#DIRECTORY_URL = 'https://acme-staging-v02.api.letsencrypt.org/directory'
+DIRECTORY_URL = 'https://acme-v02.api.letsencrypt.org/directory'
 USER_AGENT = 'python-acme-example'
 ACC_KEY_BITS = 2048
 CERT_PKEY_BITS = 2048
@@ -52,16 +53,21 @@ def create_certificate(domain, email, ftp_server, ftp_user, ftp_pass, ftp_dir, l
     pkey_pem, csr_pem = new_csr_comp(domain)
 
     # write domain key to local path
+    print("- Saving domain key file")
     k = open(os.path.join(local_path, 'domain-key.txt'),'w')
     k.write(pkey_pem.decode('utf-8'))
     k.close()
 
     # write domain csr to local path
+    print("- Saving domain csr file")
     k2 = open(os.path.join(local_path, 'domain-csr.txt'),'w')
     k2.write(csr_pem.decode('utf-8'))
     k2.close()
 
+    print("- Placing new order")
     orderr = client_acme.new_order(csr_pem)
+
+    print("- Selecting HTTP-01 challenge")
     challb = select_http01_chall(orderr)
     
     # get challenge token & thumbprint
@@ -69,27 +75,32 @@ def create_certificate(domain, email, ftp_server, ftp_user, ftp_pass, ftp_dir, l
     token_file_content = token_file_name + str('.') + token_decode(acc_key.thumbprint())
 
     # save challenge file(s)
+    print("- Creating local challenge file")
     f = open(os.path.join(local_path, token_file_name), 'w')
     f.write(token_file_content)
     f.close()
 
     # upload file
     # to do: check unsuccessful
+    print("- Uploading challenge file to server")
     challenge_upload(ftp_server, ftp_user, ftp_pass, ftp_dir, [os.path.join(local_path, token_file_name)])
 
     # delete local challenge file
+    print("- Deleting local challenge file")
     os.remove(os.path.join(local_path, token_file_name))
 
     # check challenge
     # to do: check unsuccessful
+    print("- Validating challenge")
     fullchain_pem = perform_http01(client_acme, challb, orderr)
 
     # write certificate file
+    print("- Creating local cert file")
     c = open(os.path.join(local_path, 'domain.crt'),'w')
     c.write(fullchain_pem)
     c.close()
 
-    print('Certificate created')
+    print('- Certificate created')
     return True
 
 # thank you -- below is from

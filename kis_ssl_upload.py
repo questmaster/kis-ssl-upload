@@ -44,27 +44,27 @@ def main():
     # kis login
     print(" ")
     print("Uploading certificates")    
-    print("Logging into HE KIS.")
+    print("- Logging into HE KIS.")
     browser = kis_login(config['settings']['kis_user'], config['settings']['kis_password'])
     if not browser:
-        print('Invalid user name or password.')
+        print('- Invalid user name or password.')
         exit()
 
     # pull ssl domains from kis
     hosteurope_domains = get_ssl_domains(browser, config['settings']['kis_webpack_id'])
-    print("Found " + str(len(hosteurope_domains)) + " domains in KIS.")
+    print("- Found " + str(len(hosteurope_domains)) + " domains in KIS.")
 
     # loop through HE domains and update SSL if in config & new certificate exists
     for h in hosteurope_domains:
         for d in domains:
             if d.certificate_created == True:
                 if h.url == d.url:
-                    print("Now updating " + str(h.url))
+                    print("- Now updating " + str(h.url))
                     h2 = get_domain(domains, h.url)
                     if upload_certificate(browser, h.ssl_href, h2.local_path, h2.cert_file, h2.key_file):
-                        print("Uploaded successfully")
+                        print("- Uploaded successfully")
                     else:
-                        print("Upload failed")
+                        print("- Upload failed")
 
     # log out of KIS
     browser.visit('https://kis.hosteurope.de/?logout=1')

@@ -21,25 +21,39 @@ class Domain():
     def __repr__(self):
         return self.url + ' / ' + self.ssl_href
 
+class Certificate():
+    urls = []
+    local_path = ''
+    ftp_server = ''
+    ftp_user = ''
+    ftp_pass = ''
+    name = ''
+    created = False
+
+class Url():
+    url = ''
+    challenge_path = ''
+    ftp_server = ''
+    ftp_user = ''
+    ftp_pass = ''    
+
 def main():
     print("HostEurope SSL Updater")
 
     # parse config
-    config, domains = read_config()
-    if len(domains) == 0:
+    config, certificates = read_config()
+    if len(certificates) == 0:
         print('Config file empty or not existing.')
         exit()
 
-    print('Found ' + str(len(domains)) + ' domains in config file.')
-
+    print('Found ' + str(len(certificates)) + ' certificate requests in config file.')    
     print(" ")
-    print("Creating certificates")
 
-    # create certificates
-    for d in domains:
-        print('Creating certificate for ' + str(d.url))
-        if create_certificate(d.url, config['settings']['email'], d.ftp_server, d.ftp_user, d.ftp_pass, d.challenge_path, d.local_path):
-            d.certificate_created = True
+    # loop through cert requests and create them
+    for c in certificates:
+        print('Creating certificate: ' + str(c.name))
+        if create_certificate(c.urls, config['settings']['email'], c.ftp_server, c.ftp_user, c.ftp_pass, c.local_path):
+            c.created = True
 
     # kis login
     print(" ")
@@ -56,11 +70,12 @@ def main():
 
     # loop through HE domains and update SSL if in config & new certificate exists
     for h in hosteurope_domains:
-        for d in domains:
-            if d.certificate_created == True:
-                if h.url == d.url:
+        #for d in domains:
+        for c in certificates:
+            if c.created == True:
+                if h.url in c.urls or 'www.'.join(h.url) in c.urls:
                     print("- Now updating " + str(h.url))
-                    h2 = get_domain(domains, h.url)
+                    h2 = get_domain(certificates, h.url)
                     if upload_certificate(browser, h.ssl_href, h2.local_path, h2.cert_file, h2.key_file):
                         print("- Uploaded successfully")
                     else:
@@ -74,6 +89,7 @@ def main():
 def read_config():
     # read domain settings from config.json
     domains = []
+    
     try:
         config = json.load(open('config.json',encoding='utf-8'))
         for d in config['domains']:
@@ -87,10 +103,27 @@ def read_config():
             domain.ftp_user = d['ftp_user']
             domain.ftp_pass = d['ftp_pass']
             domains.append(domain)
+        
+        certificates = []
+        for c in config['certificates']:
+            certificate = Certificate()
+            urls = []
+            for u in c['urls']:
+                url = Url()
+                url.url = u['url']
+                url.challenge_path = u['challenge_path']
+                urls.append(url)
+            certificate.urls = urls
+            certificate.ftp_server = c['ftp_server']
+            certificate.ftp_user = c['ftp_user']
+            certificate.ftp_pass = c['ftp_pass']
+            certificate.name = c['name']
+            certificates.append(certificate)
+
     except:
         config = json.loads('{}')
 
-    return config, domains
+    return config, certificates
 
 def kis_login(username, password):
     browser = Browser('chrome')
@@ -133,7 +166,7 @@ def get_ssl_domains(browser, kis_webpack_id):
 
 def get_domain(domains, domain):
     for d in domains:
-        if d.url == domain:
+        if d.url == domain or d.url.replace('www.','') == domain:
             return d
     
     return None
@@ -149,7 +182,8 @@ def upload_certificate(browser, ssl_href, local_path, cert_file, key_file):
     # find & press upload button
     for b in browser.find_by_tag('input'):
         if b['type'] == 'submit':
-            b.click()
+            #b.click()
+            sleep(10)
             break
 
     # check if successful

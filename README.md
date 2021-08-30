@@ -15,7 +15,7 @@ Script to create & upload domain SSL certificates to [HostEurope](https://www.ho
 * Run `python kis_ssl_upload.py`
 
 ## To do
-- [ ] Allow for custom file names
+- [x] Allow for custom file names
 - [ ] Simplify `Domain` class
 - [x] Add Let's Encrypt certificate renewal
 - [x] Add 'challenge' FTP upload

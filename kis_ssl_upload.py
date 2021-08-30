@@ -87,23 +87,9 @@ def main():
     print("Done!")
 
 def read_config():
-    # read domain settings from config.json
-    domains = []
-    
+    # read certificate settings from config.json
     try:
-        config = json.load(open('config.json',encoding='utf-8'))
-        for d in config['domains']:
-            domain = Domain()
-            domain.url = d['url']
-            domain.local_path = d['local_path']
-            domain.cert_file = d['cert_file']
-            domain.key_file = d['key_file']
-            domain.challenge_path = d['challenge_path']
-            domain.ftp_server = d['ftp_server']
-            domain.ftp_user = d['ftp_user']
-            domain.ftp_pass = d['ftp_pass']
-            domains.append(domain)
-        
+        config = json.load(open('config.json',encoding='utf-8'))      
         certificates = []
         for c in config['certificates']:
             certificate = Certificate()
@@ -118,6 +104,7 @@ def read_config():
             certificate.ftp_user = c['ftp_user']
             certificate.ftp_pass = c['ftp_pass']
             certificate.name = c['name']
+            certificate.local_path = c['local_path']
             certificates.append(certificate)
 
     except:

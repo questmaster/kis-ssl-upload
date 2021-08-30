@@ -100,16 +100,21 @@ def create_certificate(domains, email, ftp_server, ftp_user, ftp_pass, local_pat
 
     # confirm validations done
     print("- Informing CA that all challenges complete")
-    fullchain_pem = confirm_challenges_complete(client_acme, orderr)
+    try:
+        fullchain_pem = confirm_challenges_complete(client_acme, orderr)
 
-    # write certificate file
-    print("- Creating local cert file in " + str(local_path))
-    c = open(os.path.join(local_path, 'domain.crt'),'w')
-    c.write(fullchain_pem)
-    c.close()
+        # write certificate file
+        print("- Creating local cert file in " + str(local_path))
+        c = open(os.path.join(local_path, 'domain.crt'),'w')
+        c.write(fullchain_pem)
+        c.close()
 
-    print('- Certificate created')
-    return True
+        print('- Certificate created')
+        return True
+        
+    except:
+        print('- Certificate creation failed')
+        return False
 
 def confirm_challenges_complete(client_acme, orderr):
     """Let CA know that all challenges are completed."""

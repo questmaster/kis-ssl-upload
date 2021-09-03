@@ -7,7 +7,7 @@ Script to create & upload domain SSL certificates to [HostEurope](https://www.ho
 * Create new SSL certificate for domain (incl. HTTP-01 challenge file upload to FTP server)
 * Log into KIS (using Chrome)
 * Upload SSL certificate / domain key files
-* Can be used in bulk: Add 1-n domains in the config file
+* Can be used in bulk: Add 1-n certificates / domains aliases in the config file
 
 ## Usage
 * Make sure packages in `requirements.txt` are available
@@ -22,3 +22,4 @@ Script to create & upload domain SSL certificates to [HostEurope](https://www.ho
 - [x] Confirm result after upload
 - [x] Support KIS GUI set to English
 - [x] Multi-domain certificates
+- [ ] Better error handling

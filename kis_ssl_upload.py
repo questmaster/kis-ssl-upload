@@ -44,8 +44,10 @@ def main():
     # parse config
     config, certificates = read_config()
     if len(certificates) == 0:
-        print('Config file empty or not existing.')
+        print('Config file empty, incomplete or not existing.')
         exit()
+
+    exit()
 
     print('Found ' + str(len(certificates)) + ' certificate requests in config file.')    
     print(" ")
@@ -89,9 +91,9 @@ def main():
 
 def read_config():
     # read certificate settings from config.json
+    certificates = []
+    config = json.load(open('config.json',encoding='utf-8'))      
     try:
-        config = json.load(open('config.json',encoding='utf-8'))      
-        certificates = []
         for c in config['certificates']:
             certificate = Certificate()
             urls = []
@@ -106,7 +108,8 @@ def read_config():
             certificate.ftp_pass = c['ftp_pass']
             certificate.name = c['name']
             certificate.local_path = c['local_path']
-            certificates.kis_domain = c['kis_domain']
+            if 'kis_domain' in c:
+                certificates.kis_domain = c['kis_domain']
             certificates.append(certificate)
 
     except:

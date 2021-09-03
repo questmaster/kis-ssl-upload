@@ -21,6 +21,7 @@
             "local_path": "C:\\Users\\Test\\Desktop",
             "cert_file": "domain.crt",
             "key_file": "domain-key.txt",
+            "csr_file": "domain-csr.txt",
             "ftp_server": "ftp.url1.de",
             "ftp_user": "user",
             "ftp_pass": "pass"

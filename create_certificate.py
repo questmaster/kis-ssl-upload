@@ -38,7 +38,7 @@ def challenge_upload(ftp_server, ftp_user, ftp_pass, ftp_dir, challenges):
 
     return True
 
-def create_certificate(domains, email, ftp_server, ftp_user, ftp_pass, local_path):
+def create_certificate(domains, email, ftp_server, ftp_user, ftp_pass, local_path, key_file, csr_file, cert_file):
     """ register account, request certificate, prove challenge, save certificate"""
     acc_key = jose.JWKRSA(
         key=rsa.generate_private_key(public_exponent=65537,
@@ -57,13 +57,13 @@ def create_certificate(domains, email, ftp_server, ftp_user, ftp_pass, local_pat
 
     # write domain key to local path
     print("- Saving domain key file")
-    k = open(os.path.join(local_path, 'domain-key.txt'),'w')
+    k = open(os.path.join(local_path, key_file),'w')
     k.write(pkey_pem.decode('utf-8'))
     k.close()
 
     # write domain csr to local path
     print("- Saving domain csr file")
-    k2 = open(os.path.join(local_path, 'domain-csr.txt'),'w')
+    k2 = open(os.path.join(local_path, csr_file),'w')
     k2.write(csr_pem.decode('utf-8'))
     k2.close()
 
@@ -105,7 +105,7 @@ def create_certificate(domains, email, ftp_server, ftp_user, ftp_pass, local_pat
 
         # write certificate file
         print("- Creating local cert file in " + str(local_path))
-        c = open(os.path.join(local_path, 'domain.crt'),'w')
+        c = open(os.path.join(local_path, cert_file),'w')
         c.write(fullchain_pem)
         c.close()
 

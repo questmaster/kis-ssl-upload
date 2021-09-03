@@ -159,13 +159,6 @@ def get_ssl_domains(browser, kis_webpack_id):
 
     return domains
 
-def get_domain(domains, domain):
-    for d in domains:
-        if d.url == domain or d.url.replace('www.','') == domain:
-            return d
-    
-    return None
-
 def upload_certificate(browser, ssl_href, local_path, cert_file, key_file):
     # open cert upload page for domain
     browser.visit(ssl_href)

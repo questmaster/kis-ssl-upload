@@ -28,6 +28,7 @@ class Certificate():
     ftp_user = ''
     ftp_pass = ''
     name = ''
+    kis_domain = ''
     created = False
 
 class Url():
@@ -105,6 +106,7 @@ def read_config():
             certificate.ftp_pass = c['ftp_pass']
             certificate.name = c['name']
             certificate.local_path = c['local_path']
+            certificates.kis_domain = c['kis_domain']
             certificates.append(certificate)
 
     except:

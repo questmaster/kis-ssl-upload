@@ -81,8 +81,6 @@ def main():
                             print("- Uploaded successfully")
                         else:
                             print("- Upload failed")
-                    else:
-                        print("no match: " + str(u.kis_domain) + " / " + str(h.url))
 
     # log out of KIS
     browser.visit('https://kis.hosteurope.de/?logout=1')

@@ -24,3 +24,4 @@ Script to create & upload domain SSL certificates to [HostEurope](https://www.ho
 - [x] Support KIS GUI set to English
 - [x] Multi-domain certificates
 - [ ] Better error handling
+- [ ] Enable individual FTP logins for URLs

@@ -9,14 +9,6 @@ from create_certificate import create_certificate
 class Domain():
     url = ''
     ssl_href = ''
-    local_path = ''
-    cert_file = ''
-    key_file = ''
-    challenge_path = ''
-    certificate_created = False
-    ftp_server = ''
-    ftp_user = ''
-    ftp_pass = ''
 
     def __repr__(self):
         return self.url + ' / ' + self.ssl_href
@@ -24,12 +16,17 @@ class Domain():
 class Certificate():
     urls = []
     local_path = ''
+    key_file = ''
+    csr_file = ''
+    cert_file = ''
     ftp_server = ''
     ftp_user = ''
     ftp_pass = ''
     name = ''
-    kis_domain = ''
     created = False
+
+    def __repr__(self):
+        return self.name
 
 class Url():
     url = ''
@@ -37,6 +34,10 @@ class Url():
     ftp_server = ''
     ftp_user = ''
     ftp_pass = ''    
+    kis_domain = ''
+
+    def __repr__(self):
+        return self.url
 
 def main():
     print("HostEurope SSL Updater")
@@ -47,15 +48,13 @@ def main():
         print('Config file empty, incomplete or not existing.')
         exit()
 
-    exit()
-
     print('Found ' + str(len(certificates)) + ' certificate requests in config file.')    
     print(" ")
 
     # loop through cert requests and create them
     for c in certificates:
         print('Creating certificate: ' + str(c.name))
-        if create_certificate(c.urls, config['settings']['email'], c.ftp_server, c.ftp_user, c.ftp_pass, c.local_path):
+        if create_certificate(c.urls, config['settings']['email'], c.ftp_server, c.ftp_user, c.ftp_pass, c.local_path, c.key_file, c.csr_file, c.cert_file):
             c.created = True
 
     # kis login
@@ -72,17 +71,18 @@ def main():
     print("- Found " + str(len(hosteurope_domains)) + " domains in KIS.")
 
     # loop through HE domains and update SSL if in config & new certificate exists
-    for h in hosteurope_domains:
-        #for d in domains:
-        for c in certificates:
-            if c.created == True:
-                if h.url in c.urls or 'www.'.join(h.url) in c.urls:
-                    print("- Now updating " + str(h.url))
-                    h2 = get_domain(certificates, h.url)
-                    if upload_certificate(browser, h.ssl_href, h2.local_path, h2.cert_file, h2.key_file):
-                        print("- Uploaded successfully")
+    for c in certificates:
+        if c.created == True:
+            for u in c.urls:
+                for h in hosteurope_domains:
+                    if h.url == u.kis_domain:
+                        print("- Now updating " + str(u.kis_domain))
+                        if upload_certificate(browser, h.ssl_href, c.local_path, c.cert_file, c.key_file):
+                            print("- Uploaded successfully")
+                        else:
+                            print("- Upload failed")
                     else:
-                        print("- Upload failed")
+                        print("no match: " + str(u.kis_domain) + " / " + str(h.url))
 
     # log out of KIS
     browser.visit('https://kis.hosteurope.de/?logout=1')
@@ -102,14 +102,17 @@ def read_config():
                 url.url = u['url']
                 url.challenge_path = u['challenge_path']
                 urls.append(url)
+                if 'kis_domain' in u:
+                    url.kis_domain = u['kis_domain']
             certificate.urls = urls
             certificate.ftp_server = c['ftp_server']
             certificate.ftp_user = c['ftp_user']
             certificate.ftp_pass = c['ftp_pass']
             certificate.name = c['name']
             certificate.local_path = c['local_path']
-            if 'kis_domain' in c:
-                certificates.kis_domain = c['kis_domain']
+            certificate.key_file = c['key_file']
+            certificate.csr_file = c['csr_file']
+            certificate.cert_file = c['cert_file']
             certificates.append(certificate)
 
     except:
@@ -174,8 +177,7 @@ def upload_certificate(browser, ssl_href, local_path, cert_file, key_file):
     # find & press upload button
     for b in browser.find_by_tag('input'):
         if b['type'] == 'submit':
-            #b.click()
-            sleep(10)
+            b.click()
             break
 
     # check if successful

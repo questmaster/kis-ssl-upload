@@ -57,6 +57,11 @@ def main():
         if create_certificate(c.urls, config['settings']['email'], c.ftp_server, c.ftp_user, c.ftp_pass, c.local_path, c.key_file, c.csr_file, c.cert_file):
             c.created = True
 
+    # check if any certificates were created successfully, else abort
+    if sum(c.created == True for c in certificates) == 0:
+        print("No certificates were created, abort upload.")
+        exit()
+
     # kis login
     print(" ")
     print("Uploading certificates")    
@@ -102,6 +107,7 @@ def read_config():
                 urls.append(url)
                 if 'kis_domain' in u:
                     url.kis_domain = u['kis_domain']
+            urls.sort(key=lambda url: url.url)
             certificate.urls = urls
             certificate.ftp_server = c['ftp_server']
             certificate.ftp_user = c['ftp_user']

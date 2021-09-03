@@ -14,8 +14,8 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 import os
 from ftplib import FTP
 
-DIRECTORY_URL = 'https://acme-staging-v02.api.letsencrypt.org/directory'
-#DIRECTORY_URL = 'https://acme-v02.api.letsencrypt.org/directory'
+#DIRECTORY_URL = 'https://acme-staging-v02.api.letsencrypt.org/directory'
+DIRECTORY_URL = 'https://acme-v02.api.letsencrypt.org/directory'
 USER_AGENT = 'python-acme-example'
 ACC_KEY_BITS = 2048
 CERT_PKEY_BITS = 2048
@@ -118,6 +118,7 @@ def create_certificate(domains, email, ftp_server, ftp_user, ftp_pass, local_pat
 
 def confirm_challenges_complete(client_acme, orderr):
     """Let CA know that all challenges are completed."""
+    # Wait for challenge status and then issue a certificate.
     finalized_orderr = client_acme.poll_and_finalize(orderr)
     return finalized_orderr.fullchain_pem
 
@@ -181,10 +182,4 @@ def perform_http01(client_acme, challb, orderr):
         # Let the CA server know that we are ready for the challenge.
         client_acme.answer_challenge(challb, response)
 
-        # Wait for challenge status and then issue a certificate.
-        # It is possible to set a deadline time.
-        # finalized_orderr = client_acme.poll_and_finalize(orderr)
-
-    # commented out, multi-domain use need separate answer & finalization
-    # return finalized_orderr.fullchain_pem
     return True

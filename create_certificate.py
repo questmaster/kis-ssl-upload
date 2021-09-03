@@ -11,11 +11,12 @@ import josepy as jose
 from acme.client import ClientNetwork, ClientV2
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
 import os
 from ftplib import FTP
 
-#DIRECTORY_URL = 'https://acme-staging-v02.api.letsencrypt.org/directory'
-DIRECTORY_URL = 'https://acme-v02.api.letsencrypt.org/directory'
+DIRECTORY_URL = 'https://acme-staging-v02.api.letsencrypt.org/directory'
+#DIRECTORY_URL = 'https://acme-v02.api.letsencrypt.org/directory'
 USER_AGENT = 'python-acme-example'
 ACC_KEY_BITS = 2048
 CERT_PKEY_BITS = 2048
@@ -38,12 +39,22 @@ def challenge_upload(ftp_server, ftp_user, ftp_pass, ftp_dir, challenges):
 
     return True
 
-def create_certificate(domains, email, ftp_server, ftp_user, ftp_pass, local_path, key_file, csr_file, cert_file):
+def create_certificate(domains, email, ftp_server, ftp_user, ftp_pass, local_path, key_file, csr_file, cert_file, account_file):
     """ register account, request certificate, prove challenge, save certificate"""
     acc_key = jose.JWKRSA(
         key=rsa.generate_private_key(public_exponent=65537,
                                      key_size=ACC_KEY_BITS,
                                      backend=default_backend()))
+
+    # write account key to local path
+    print("- Saving account key file")
+    ak = open(os.path.join(local_path, 'account-key.txt'),'w')
+    ak.write(acc_key.key.private_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.TraditionalOpenSSL,
+        encryption_algorithm=serialization.NoEncryption()
+        ).decode('utf-8'))
+    ak.close()
 
     net = client.ClientNetwork(acc_key, user_agent=USER_AGENT)
     directory = messages.Directory.from_json(net.get(DIRECTORY_URL).json())

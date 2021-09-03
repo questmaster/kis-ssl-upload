@@ -22,6 +22,7 @@
             "cert_file": "domain.crt",
             "key_file": "domain-key.txt",
             "csr_file": "domain-csr.txt",
+            "account_file": "account-key.txt",
             "ftp_server": "ftp.url1.de",
             "ftp_user": "user",
             "ftp_pass": "pass"

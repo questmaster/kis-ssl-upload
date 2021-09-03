@@ -12,6 +12,7 @@ Script to create & upload domain SSL certificates to [HostEurope](https://www.ho
 ## Usage
 * Make sure packages in `requirements.txt` are available
 * Edit `config.json.example` and remove `.example` suffix
+* Choose between 'staging' and 'production' environment in `create_certificate.py` (line 18/19)
 * Run `python kis_ssl_upload.py`
 
 ## To do

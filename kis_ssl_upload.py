@@ -96,8 +96,8 @@ def main():
 def read_config():
     # read certificate settings from config.json
     certificates = []
-    config = json.load(open('config.json',encoding='utf-8'))      
     try:
+        config = json.load(open('config.json',encoding='utf-8'))      
         for c in config['certificates']:
             certificate = Certificate()
             urls = []

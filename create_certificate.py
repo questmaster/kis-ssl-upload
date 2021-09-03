@@ -48,7 +48,7 @@ def create_certificate(domains, email, ftp_server, ftp_user, ftp_pass, local_pat
 
     # write account key to local path
     print("- Saving account key file")
-    ak = open(os.path.join(local_path, 'account-key.txt'),'w')
+    ak = open(os.path.join(local_path, account_file),'w')
     ak.write(acc_key.key.private_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PrivateFormat.TraditionalOpenSSL,

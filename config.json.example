@@ -11,11 +11,17 @@
             "urls": [
                 {
                     "url": "url1.de",
-                    "challenge_path": "/www/url1/.well-known/acme-challenge"
+                    "challenge_path": "/www/url1/.well-known/acme-challenge",
+                    "kis_domain": "url1.de"
                 },
                 {
+                    "url": "www.url1.de",
+                    "challenge_path": "/www/url1/.well-known/acme-challenge"
+                },                
+                {
                     "url": "url2.de",
-                    "challenge_path": "/www/url2/.well-known/acme-challenge"
+                    "challenge_path": "/www/url2/.well-known/acme-challenge",
+                    "kis_domain": "url2.de"
                 }
             ],
             "local_path": "C:\\Users\\Test\\Desktop",

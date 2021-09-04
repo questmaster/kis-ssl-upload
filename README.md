@@ -38,6 +38,7 @@ Script to create & upload domain SSL certificates to [HostEurope](https://www.ho
 "certificates": [
     {
         "name": "Test name",
+        "testing": true,
         "urls": [
             {
                 "url": "url1.de",
@@ -67,6 +68,7 @@ Script to create & upload domain SSL certificates to [HostEurope](https://www.ho
 ```
 
 * `name` - Friendly name of your certificate
+* `testing` - if `true` then Let's Encrypt's [staging environment](https://letsencrypt.org/docs/staging-environment/) will be used
 * `urls` - Contains all urls / domain aliases you want in the certificate
   * `url` - (Sub)domain name; if you want to include www. and non-www, add a url for both
   * `challenge_path` - Path to  ACME challenge directory of that domain

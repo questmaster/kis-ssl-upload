@@ -25,6 +25,7 @@ class Certificate():
     ftp_pass = ''
     name = ''
     created = False
+    testing = False
 
     def __repr__(self):
         return self.name
@@ -55,7 +56,7 @@ def main():
     # loop through cert requests and create them
     for c in certificates:
         print('Creating certificate: ' + str(c.name))
-        if create_certificate(c.urls, config['settings']['email'], c.ftp_server, c.ftp_user, c.ftp_pass, c.local_path, c.key_file, c.csr_file, c.cert_file, c.account_file):
+        if create_certificate(c.urls, config['settings']['email'], c.ftp_server, c.ftp_user, c.ftp_pass, c.local_path, c.key_file, c.csr_file, c.cert_file, c.account_file, c.testing):
             c.created = True
 
     # check if any certificates were created successfully, else abort
@@ -119,6 +120,10 @@ def read_config():
             certificate.csr_file = c['csr_file']
             certificate.cert_file = c['cert_file']
             certificate.account_file = c['account_file']
+            if c['testing'] == True:
+                certificate.testing = True
+            else:
+                certificate.testing = False
             certificates.append(certificate)
 
     except:

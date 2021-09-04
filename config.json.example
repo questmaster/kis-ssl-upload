@@ -8,6 +8,7 @@
     "certificates": [
         {
             "name": "Test name",
+            "testing": true,
             "urls": [
                 {
                     "url": "url1.de",

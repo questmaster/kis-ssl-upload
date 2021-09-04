@@ -4,19 +4,19 @@ from acme import messages
 from acme import crypto_util
 from acme import challenges
 from acme import standalone
+from acme.client import ClientNetwork, ClientV2
 from contextlib import contextmanager
 import OpenSSL
 import base64
 import josepy as jose
-from acme.client import ClientNetwork, ClientV2
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 import os
 from ftplib import FTP
 
-DIRECTORY_URL = 'https://acme-staging-v02.api.letsencrypt.org/directory'
-#DIRECTORY_URL = 'https://acme-v02.api.letsencrypt.org/directory'
+DIRECTORY_URL_TESTING = 'https://acme-staging-v02.api.letsencrypt.org/directory'
+DIRECTORY_URL_PRODUCTION = 'https://acme-v02.api.letsencrypt.org/directory'
 USER_AGENT = 'python-acme-example'
 ACC_KEY_BITS = 2048
 CERT_PKEY_BITS = 2048
@@ -39,7 +39,7 @@ def challenge_upload(ftp_server, ftp_user, ftp_pass, ftp_dir, challenges):
 
     return True
 
-def create_certificate(domains, email, ftp_server, ftp_user, ftp_pass, local_path, key_file, csr_file, cert_file, account_file):
+def create_certificate(domains, email, ftp_server, ftp_user, ftp_pass, local_path, key_file, csr_file, cert_file, account_file, testing):
     """ register account, request certificate, prove challenge, save certificate"""
     acc_key = jose.JWKRSA(
         key=rsa.generate_private_key(public_exponent=65537,
@@ -57,7 +57,11 @@ def create_certificate(domains, email, ftp_server, ftp_user, ftp_pass, local_pat
     ak.close()
 
     net = client.ClientNetwork(acc_key, user_agent=USER_AGENT)
-    directory = messages.Directory.from_json(net.get(DIRECTORY_URL).json())
+    if testing:
+        directory = messages.Directory.from_json(net.get(DIRECTORY_URL_TESTING).json())
+    else:
+        directory = messages.Directory.from_json(net.get(DIRECTORY_URL_PRODUCTION).json())
+
     client_acme = client.ClientV2(directory, net=net)
 
     regr = client_acme.new_account(

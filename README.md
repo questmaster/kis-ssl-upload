@@ -90,3 +90,4 @@ Note: The script does support multiple certificate requests.
 - [x] Multi-domain certificates
 - [ ] Better error handling
 - [ ] Enable individual FTP logins for URLs
+- [ ] Switch to [woob](https://github.com/rbignon/woob) (or similar)

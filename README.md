@@ -11,6 +11,7 @@ Script to create & upload domain SSL certificates to [HostEurope](https://www.ho
 
 ## Usage
 * Make sure packages in `requirements.txt` are available
+* Check if you have [ChromeDriver](https://sites.google.com/chromium.org/driver/) installed for your current Chrome version
 * Edit `config.json.example` and remove `.example` suffix
 * Run `python kis_ssl_upload.py`
 

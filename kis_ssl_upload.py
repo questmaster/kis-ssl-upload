@@ -3,6 +3,7 @@ from splinter import Browser
 from time import sleep
 import json
 import os
+import chromedriver_autoinstaller
 
 from create_certificate import create_certificate
 
@@ -132,6 +133,8 @@ def read_config():
     return config, certificates
 
 def kis_login(username, password):
+    chromedriver_autoinstaller.install()
+    
     browser = Browser('chrome')
 
     # log into KIS
